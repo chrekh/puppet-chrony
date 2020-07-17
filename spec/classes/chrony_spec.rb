@@ -39,9 +39,9 @@ describe 'chrony' do
       end
 
       context 'chrony::config' do
-        case facts[:osfamily]
-        when 'Archlinux'
-          context 'using defaults' do
+        context 'using defaults' do
+          case facts[:osfamily]
+          when 'Archlinux'
             it do
               is_expected.to contain_file(config_file)
                 .with_content(%r{^\s*cmdallow 127\.0\.0\.1$})
@@ -55,17 +55,8 @@ describe 'chrony' do
                 .with_content(%r{^\s*dumpdir /var/lib/chrony$})
                 .without_content(%r{^\s*\n\s*$})
             end
-            it do
-              is_expected.to contain_file(keys_file)
-                .with_mode('0644')
-                .with_owner('0')
-                .with_group('0')
-                .with_replace(true)
-                .with_content("0 xyzzy\n")
-            end
-          end
-        when 'Gentoo'
-          context 'using defaults' do
+            it { is_expected.to contain_file(keys_file).with_mode('0644') }
+          when 'Gentoo'
             it do
               is_expected.to contain_file(config_file)
                 .without_content(%r{^\s*cmdallow})
@@ -79,17 +70,7 @@ describe 'chrony' do
                 .without_content(%r{^\s*dumpdir})
                 .without_content(%r{^\s*\n\s*$})
             end
-            it do
-              is_expected.to contain_file(keys_file)
-                .with_mode('0644')
-                .with_owner('0')
-                .with_group('0')
-                .with_replace(true)
-                .with_content("0 xyzzy\n")
-            end
-          end
-        when 'RedHat'
-          context 'using defaults' do
+          when 'RedHat'
             it do
               is_expected.to contain_file(config_file)
                 .with_content(%r{^\s*bindcmdaddress ::1$})
@@ -104,17 +85,7 @@ describe 'chrony' do
                 .without_content(%r{^\s*dumpdir})
                 .without_content(%r{^\s*\n\s*$})
             end
-            it do
-              is_expected.to contain_file(keys_file)
-                .with_mode('0640')
-                .with_owner('0')
-                .with_group('chrony')
-                .with_replace(true)
-                .with_content("0 xyzzy\n")
-            end
-          end
-        when 'Debian'
-          context 'using defaults' do
+          when 'Debian'
             it do
               is_expected.to contain_file(config_file)
                 .with_content(%r{^\s*bindcmdaddress ::1$})
@@ -129,14 +100,13 @@ describe 'chrony' do
                 .without_content(%r{^\s*dumpdir})
                 .without_content(%r{^\s*\n\s*$})
             end
-            it do
-              is_expected.to contain_file(keys_file)
-                .with_mode('0640')
-                .with_owner('0')
-                .with_group('0')
-                .with_replace(true)
-                .with_content("0 xyzzy\n")
-            end
+          end
+          it do
+            is_expected.to contain_file(keys_file)
+              .with_owner('0')
+              .with_group('chrony')
+              .with_replace(true)
+              .with_content("0 xyzzy\n")
           end
         end
       end
